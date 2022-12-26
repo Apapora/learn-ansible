@@ -1,0 +1,13 @@
+---
+- name: Congiure nginx server
+  hosts: pi
+  become: true
+  tasks:
+  - name: Uninstall nginx
+    ansible.builtin.apt:
+      name: nginx
+      state: absent
+  - name: Stop nginx
+    ansible.builtin.service:
+      name: nginx
+      state: stopped 

@@ -1,0 +1,43 @@
+---
+- name: Install node and npm
+  hosts: pi
+  tasks:
+    - name: Update package repo and cache
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+    - name: Install nodejs and npm
+      apt:
+        pkg:
+          - nodejs
+          - npm
+
+- name: Create new user for node app
+  hosts: pi
+  tasks:
+    - name: Create user
+      ansible.builtin.user:
+        name: node
+        comment: node admin
+        group: admin
+
+- name: Deploy nodejs app
+  hosts: pi
+  become: true
+  become_user: node
+  tasks:
+    - name: Unpack nodejs file
+      ansible.builtin.unarchive:
+        src: ###
+        dest: /home/node
+    - name: Install dependencies
+      npm:
+        path: /home/node/package
+    - name: Start nodejs app
+      ansible.builtin.command:
+        chdir: ###
+        cmd: ###
+      async: 1000
+      poll: 0
+    - name: Ensure app is running
+      ansible.builtin.shell: ps aux | grep node
+      register: app_status
+    - ansible.builtin.debug: msg={{app_status}}

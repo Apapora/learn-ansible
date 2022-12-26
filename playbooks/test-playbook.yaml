@@ -1,0 +1,13 @@
+---
+- name: Congiure nginx server
+  hosts: pi
+  become: true
+  tasks:
+  - name: Install nginx
+    ansible.builtin.apt:
+      name: nginx
+      state: latest
+  - name: Start nginx
+    ansible.builtin.service:
+      name: nginx
+      state: started 
